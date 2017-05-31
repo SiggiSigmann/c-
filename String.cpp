@@ -40,13 +40,12 @@ char& String::operator[](int index) {
 }
 
 String& String::operator=(String& s) {
+	delete[] str;
 	size = s.size;
-	char *str2 = new char[size];
+	str = new char[size];
 	for (int i = 0; i < size; i++) {
-		str2[i] = s[i];
+		str[i] = s[i];
 	}
-	str = str2;
-	delete[] str2;
 	return *this;
 }
 
@@ -54,14 +53,14 @@ String& String::operator+=(String& s) {
 	int oldsize = size;
 	size += s.size;
 	char *str2 = new char[size];
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < oldsize; i++) {
 		str2[i] = str[i];
 	}
-	for (int i = 0; i < size; i++) {
-		str2[i + oldsize] = s[i];
+	for (int i = oldsize; i < size; i++) {
+		str2[i] = s[i-oldsize];
 	}
+	delete[] str;
 	str = str2;
-	delete[] str2;
 	return *this;
 }
 
