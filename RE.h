@@ -1,6 +1,5 @@
 // RE.h
 // Reguläre Ausdrücke
-
 #ifndef __RE__
 #define __RE__
 
@@ -211,25 +210,26 @@ class Conc: public RE {
 		}
 		RE* simp() {
 
-			r1->simp();
-			r2->simp();
+			// ferinfachung der Teilausdrücke(rekussion)
+			r1 = r1->simp();
+			r2 = r2->simp();
 
 			// 1. eps r ==> r
-			if (r1->containsEps()) {
+			if (r1->ofType()==EpsType) {
 				//delete r1;
 				return r2;
 			}
 
-			if (r2->containsEps()) {
+			if (r2->ofType()==EpsType) {
 				//delete r2;
 				return r1;
 			}
 
 			// 2. r1 r2 ==> phi falls L(r1)={} oder L(r2)={}
 			if (r1->isPhi() || r2->isPhi()) {
-				/*delete r1;
-				delete r2;
-				delete this;*/
+				//delete r1;
+				//delete r2;
+				//delete this;
 				return new Phi;
 			}
 			return this;
@@ -274,7 +274,8 @@ class Star: public RE {
 			// 3. `r* ==> eps` falls `L(r)={}`
 			if (r->isPhi()) {
 				//delete r;
-				return new Eps();
+				//return new Eps();
+
 			}
 			// 4. `(r*)* ==> r*`
 			if (r->ofType() == StarType) {
